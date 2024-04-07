@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+
+        h2 {
+            color: #333;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        #currentDate, .earnings-container p {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        #taskForm {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            width: calc(20% - 15px);
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .earnings-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        /* Mobile Styles */
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 10px;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+
+            #taskForm {
+                flex-direction: column;
+            }
+
+            label {
+                width: 100%;
+            }
+        }
+
+        .overlay-credit {
+    text-align: center;
+    margin-top: 20px;
+    z-index: 9;
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 10px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://sproutgigs.com/assets/images/logo-sg.svg" alt="SproutGigs Logo" class="logo">
+            <div>
+                <p id="currentDate"></p>
+            </div>
+            <div class="earnings-container">      
+            <p><img src="https://i.ibb.co/tDDcK15/flag-of-the-united-states-logo-53415-CDCF6-seeklogo-com.png" alt="USD Flag" width="30" height="15"> <span id="earningsUSD">0</span></p>
+            <p><img src="https://i.ibb.co/chGBtJ0/saudi-arabia-flag-logo-634-C79-FFDA-seeklogo-com.png" alt="SAR Flag" width="30" height="15"> <span id="earningsSAR">0</span></p>
+        </div>
+        </div>
+
+          <!--wav sound-->
+         <audio id="tickSound" src="https://rawcdn.githack.com/spacetoonlinks/mp3/cbc2b95f20ebc699b40be1d75393ae5a86ee4731/Dear%20Abdusamad-mp3cut.wav" preload="auto"></audio>
+          <!--wav sound-->
+        <form id="taskForm">
+            <!-- Task checkboxes will be generated here -->
+        </form>
+    </div>
+
+    <script>
+        const taskForm = document.getElementById('taskForm');
+        const earningsDisplaySAR = document.getElementById('earningsSAR');
+        const earningsDisplayUSD = document.getElementById('earningsUSD');
+        const currentDateDisplay = document.getElementById('currentDate');
+        //<!--wav sound-->
+        const tickSound = document.getElementById('tickSound');
+        //<!--wav sound-->
+        let earningsSAR = 0;
+        let earningsUSD = 0;
+
+        // Function to generate task checkboxes
+        function generateTasks(numTasks) {
+            for (let i = 1; i <= numTasks; i++) {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'task' + i;
+                checkbox.name = 'task' + i;
+                const label = document.createElement('label');
+                label.htmlFor = 'task' + i;
+                label.textContent = 'Task ' + i;
+                label.appendChild(checkbox);
+                taskForm.appendChild(label);
+
+            //<!--wav sound-->
+            // Add event listener to play sound when checkbox is clicked
+                checkbox.addEventListener('click', () => {
+                    tickSound.play();
+                });
+
+             //<!--wav sound-->
+            }
+        }
+
+        // Ask user for the number of tasks
+        const numTasksInput = prompt("How many tasks would you like to do today?");
+        if (numTasksInput !== null && numTasksInput !== "") {
+            const numTasks = parseInt(numTasksInput);
+            if (!isNaN(numTasks)) {
+                generateTasks(numTasks);
+            } else {
+                alert("Invalid input. Please enter a valid number.");
+            }
+        }
+
+        // Update current date
+        const currentDate = new Date();
+        currentDateDisplay.textContent = 'Today\'s Date: ' + currentDate.toDateString();
+
+        // Add event listener to checkboxes to update earnings
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    earningsSAR += 0.1125;
+                } else {
+                    earningsSAR -= 0.1125;
+                }
+                earningsUSD = earningsSAR / 3.75;
+                earningsDisplaySAR.textContent = earningsSAR.toFixed(4) + ' ';
+                earningsDisplayUSD.textContent = earningsUSD.toFixed(4) + ' ';
+            });
+        });
+    </script>
+    <span class="overlay-credit">
+  <p style="text-align: center;
+    margin-top: 20px;
+    z-index: 9;
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    font-size: 10px;">Made with ♥ by</p>
+<a href="https://api.whatsapp.com/send?phone=966547677832" target="_blank">
+Abdusamad Mohamed Nur Tahir</a>
+ </span>
+</body>
+</html>
